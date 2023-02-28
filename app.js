@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const errorController = require('./controllers/error');
 
 const sequelize = require('./util/database');
+const Product = require('./models/product');
+const User = require('./models/user');
 
 const app = express();
 
@@ -23,10 +25,20 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
 sequelize.sync().then((result)=>{
-    console.log(result);
+    return User.findByPk(1);
+}).then(user => {
+    if (!user) {
+        return User.create({ name: 'Sarvesh', email: 'sarvesh@gmail.com' });
+    }
+    return user;
+}).then(user => {
+    console.log(user);
 }).catch((err) => {
-    console.log(result);
+    console.log(err);
 });
 
 const PORT = 7000;
