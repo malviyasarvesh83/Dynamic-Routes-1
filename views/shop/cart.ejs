@@ -2,5 +2,24 @@
     </head>
 
     <body>
+
+        <main>
+            <% if (products.length > 0) { %>
+                <ul class="cart_item_list">
+                    <% products.forEach(p=>{ %>
+                        <li class="cart_item">
+                            <h1><%= p.title %></h1>
+                            <h2>Quantity: <%= p.cartItem.quantity %></h2>
+                            <form action="/cart-delete-item" method="post">
+                                <input type="hidden" value="<%= p.id %>" name="productId">
+                                <button class="btn danger" type="submit">Delete</button>
+                            </form>
+                        </li>
+                    <%})%>
+                </ul>
+            <% } else { %>
+                <h1>No Product in Cart..!</h1>
+            <% } %>
+        </main>
         <%- include('../includes/navigation.ejs') %>
         <%- include('../includes/end.ejs') %>
